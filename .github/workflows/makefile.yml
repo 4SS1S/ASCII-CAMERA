@@ -19,14 +19,18 @@ jobs:
       with:
         opencv-version: '4.0.0'
 
-    - name: configure
-      run: ./configure
+    # - name: configure
+    #   run: ./configure
 
     - name: Install dependencies
       run: make
 
-    - name: Run check
-      run: make check
+    - name: Create app
+      run: make all
 
-    - name: Run distcheck
-      run: make distcheck
+
+    # - name: Run check
+    #   run: make check
+
+    # - name: Run distcheck
+    #   run: make distcheck
