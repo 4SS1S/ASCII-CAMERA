@@ -1,6 +1,8 @@
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/opencv.hpp>
+#include<sys/ioctl.h>
+#include<unistd.h>
 #include<iostream>
 #include<chrono>
 #include<thread>
@@ -25,8 +27,11 @@ int main() {
   double fps = capture.get(CAP_PROP_FPS);
   int frame_duration_ms = 1000 / fps;
 
-  int width = 220;
-  int height = 50;
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+  int width = w.ws_col;
+  int height = w.ws_row;
 
   if(!capture.isOpened()) {
     cerr<<"Error";
@@ -36,7 +41,7 @@ int main() {
   int frame_width = capture.get(CAP_PROP_FRAME_WIDTH);
   int frame_height = capture.get(CAP_PROP_FRAME_HEIGHT);
 
-  height = (width * frame_height / frame_width) * 0.4194;
+  height = (w.ws_col * frame_height / frame_width) * 0.4194;
   // namedWindow("w", 1);
 
   while(true) {
