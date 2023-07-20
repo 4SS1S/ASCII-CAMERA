@@ -10,6 +10,7 @@
 using namespace std;
 using namespace cv;
 
+// Get the pixel and returns it in pixel
 string pixelToASCII(int pixel_intensity) {
   const string ASCII_CHARS = " ._-=+*!&#%$@";
   
@@ -20,6 +21,7 @@ string pixelToASCII(int pixel_intensity) {
 }
 
 int main() {
+  // Video variables
   Mat frame, gray_frame, resized_frame;
 
   VideoCapture capture(0, CAP_ANY);
@@ -27,9 +29,9 @@ int main() {
   double fps = capture.get(CAP_PROP_FPS);
   int frame_duration_ms = 1000 / fps;
 
+  // Get terminal size
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
   int width = w.ws_col;
   int height = w.ws_row;
 
@@ -38,6 +40,7 @@ int main() {
     return -1;
   }
 
+  // Frames size
   int frame_width = capture.get(CAP_PROP_FRAME_WIDTH);
   int frame_height = capture.get(CAP_PROP_FRAME_HEIGHT);
 
@@ -47,10 +50,12 @@ int main() {
   while(true) {
     capture >> frame;
 
+    // Stop if it's empty
     if (frame.empty()) {
       break;
     }
 
+    // Get the image as B&W
     cvtColor(frame, gray_frame, COLOR_BGR2GRAY);
 
     resize(
@@ -73,8 +78,13 @@ int main() {
       ascii_frame += "\n";
     }
 
-    // imshow("w", frame);
-    cout<<ascii_frame;
+    // imshow("w", gray_frame);
+    cout<<ascii_frame<<endl;
+
+    // Clear screem
+    cout<<"\x1B[2J\x1B[H";
+
+    
     this_thread::sleep_for(chrono::milliseconds(frame_duration_ms));
   }
 
